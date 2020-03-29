@@ -1,6 +1,12 @@
 <template>
     <div class="v-cart">
         <h1>Корзина</h1>
+        <router-link :to="{name:'catalog'}">
+            <div class="v-catalog__link_to_cart">
+                Каталог
+            </div>
+        </router-link>
+        <p v-if="!cart_data.length">The are not elements</p>
         <v-cart-item
                v-for="(item,index) in cart_data"
                :cart_item_data="item"
