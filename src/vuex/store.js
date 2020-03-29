@@ -12,8 +12,26 @@ let store = new Vuex.Store({
             state.products = products
         },
         SET_CART:(state,product)=>{
-            state.cart.push(product)
-        }
+            if (state.cart.length){
+                let isProductExist=false;
+                state.cart.map(function (item) {
+                    if (item.article === product.article) {
+                        isProductExist = true;
+                        item.quantity+=1;
+                    }
+                })
+                if (!isProductExist){
+                    state.cart.push(product)
+                }
+            } else{
+                state.cart.push(product);
+            }
+
+        },
+        REMOVE:(state,index)=>{
+            state.cart.splice(index,1)
+        },
+
     },
     actions:{
         GET_PRODUCTS_FROM_API({commit}){
@@ -31,7 +49,10 @@ let store = new Vuex.Store({
         },
         ADD_TO_CART({commit},product){
             commit("SET_CART",product)
-        }
+        },
+        DELETE_FROM_CART({commit},index){
+            commit("REMOVE",index)
+        },
     },
     getters:{
         PRODUCTS(state){

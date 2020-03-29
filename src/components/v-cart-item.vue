@@ -9,7 +9,7 @@
         <div class="v-cart-item__quantity">
           {{cart_item_data.quantity}}
         </div>
-        <button>Delete</button>
+        <button @click="deleteFromCart">Delete</button>
     </div>
 </template>
 
@@ -22,6 +22,11 @@
                 default(){
                     return {}
                 }
+            }
+        },
+        methods:{
+            deleteFromCart(){
+                this.$emit("deleteFromCart")
             }
         },
         mounted() {
