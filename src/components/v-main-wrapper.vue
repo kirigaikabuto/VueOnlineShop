@@ -19,7 +19,7 @@
         props:{},
         data(){
             return{
-                title:"Онлайн магазин"
+                title:"AnimeVost"
             }
         },
         computed:{

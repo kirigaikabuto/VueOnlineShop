@@ -1,19 +1,12 @@
 <template>
 <div class="v-catalog">
-    <h1>Catalog</h1>
-    <router-link :to="{name:'cart',params:{cart_data: CART}}">
-        <div class="v-catalog__link_to_cart">
-            Cart:{{CART.length}}
-        </div>
-    </router-link>
-
+    <h1>Список Аниме</h1>
     <div class="v-catalog__list">
     <v-catalog-item
-            v-for="product in PRODUCTS "
-            :key="product.article"
+            v-for="product in ANIMES"
+            :key="product.id"
             :product_data="product"
-            @addToCart="addToCart"
-    />
+            @addToCart="addToCart"/>
     </div>
 </div>
 </template>
@@ -36,12 +29,14 @@
             ...mapGetters([
                 'PRODUCTS',
                 'CART',
+                'ANIMES',
             ])
         },
         methods:{
             ...mapActions([
                 'GET_PRODUCTS_FROM_API',
                 'ADD_TO_CART',
+                'GET_ANIMES_FROM_API',
             ]),
             addToCart(data){
                 this.ADD_TO_CART(data)
@@ -53,7 +48,13 @@
                 if(response.data){
                     console.log("data is getted")
                 }
-            })
+            });
+            this.GET_ANIMES_FROM_API().then((response)=>{
+              if(response.data){
+                console.log("data anime is getted")
+              }
+              console.log(response.data)
+            });
         }
     }
 </script>

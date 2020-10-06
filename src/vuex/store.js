@@ -1,66 +1,102 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
+
 Vue.use(Vuex);
 let store = new Vuex.Store({
-    state:{
-        products:[],
-        cart:[]
+    state: {
+        products: [],
+        cart: [],
+        animes: [],
+        recommendedAnimes: [],
     },
-    mutations:{
-        SET_PRODUCTS_TO_STATE:(state,products)=>{
+    mutations: {
+        SET_PRODUCTS_TO_STATE: (state, products) => {
             state.products = products
         },
-        SET_CART:(state,product)=>{
-            if (state.cart.length){
-                let isProductExist=false;
+        SET_CART: (state, product) => {
+            if (state.cart.length) {
+                let isProductExist = false;
                 state.cart.map(function (item) {
                     if (item.article === product.article) {
                         isProductExist = true;
-                        item.quantity+=1;
+                        item.quantity += 1;
                     }
                 })
-                if (!isProductExist){
+                if (!isProductExist) {
                     state.cart.push(product)
                 }
-            } else{
+            } else {
                 state.cart.push(product);
             }
 
         },
-        REMOVE:(state,index)=>{
-            state.cart.splice(index,1)
+        REMOVE: (state, index) => {
+            state.cart.splice(index, 1)
         },
-
+        SET_ANIMES_TO_STATE: (state, animes) => {
+            state.animes = animes
+        },
+        SET_RECOMMENDED_ANIMES_TO_STATE: (state, animes) => {
+            state.recommendedAnimes = animes
+        }
     },
-    actions:{
-        GET_PRODUCTS_FROM_API({commit}){
-            return axios("http://localhost:3000/products",{
-                method:"GET"
+    actions: {
+        GET_PRODUCTS_FROM_API({commit}) {
+            return axios("http://localhost:3000/products", {
+                method: "GET"
             })
-                .then((products)=>{
-                    commit("SET_PRODUCTS_TO_STATE",products.data);
+                .then((products) => {
+                    commit("SET_PRODUCTS_TO_STATE", products.data);
                     return products;
                 })
-                .catch((error)=>{
+                .catch((error) => {
                     console.log(error);
                     return error;
                 })
         },
-        ADD_TO_CART({commit},product){
-            commit("SET_CART",product)
+        GET_ANIMES_FROM_API({commit}) {
+            return axios("http://127.0.0.1:8000/movies?count=30", {
+                method: "GET"
+            }).then((animes) => {
+                commit("SET_ANIMES_TO_STATE", animes.data);
+                return animes;
+            }).catch((error) => {
+                console.log(error);
+                return error;
+            })
         },
-        DELETE_FROM_CART({commit},index){
-            commit("REMOVE",index)
+        ADD_TO_CART({commit}, product) {
+            commit("SET_CART", product)
         },
+        DELETE_FROM_CART({commit}, index) {
+            commit("REMOVE", index)
+        },
+        GET_RECOMMENDED_ANIMES({commit},obj) {
+            return axios("http://127.0.0.1:8000/movies/"+obj.id, {
+                method: "GET"
+            }).then((animes) => {
+                commit("SET_RECOMMENDED_ANIMES_TO_STATE", animes.data);
+                return animes
+            }).catch((error) => {
+                console.log(error);
+                return error
+            })
+        }
     },
-    getters:{
-        PRODUCTS(state){
+    getters: {
+        PRODUCTS(state) {
             return state.products;
         },
-        CART(state){
+        CART(state) {
             return state.cart;
-        }
+        },
+        ANIMES(state) {
+            return state.animes;
+        },
+        RECOMMENDED_ANIMES(state) {
+          return state.recommendedAnimes
+        },
     }
 });
 

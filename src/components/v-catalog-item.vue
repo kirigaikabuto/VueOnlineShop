@@ -1,13 +1,13 @@
 <template>
 <div class="v-catalog-item">
-    <img :src="require('../assets/images/'+product_data.image)" class="v-catalog-item__image">
+    <img :src="product_data.photo" class="v-catalog-item__image">
     <p class="v-catalog-item__name">{{product_data.name}}</p>
-    <p class="v-catalog-item__price">{{product_data.price}}</p>
-    <button
-            class="v-catalog-item__add_to_cart_btn btn"
-            @click="addToCart ">
-            Add to cart
+    <p class="v-catalog-item__price">{{product_data.count_episode}}</p>
+  <router-link :to="{name:'catalog_item',params:{anime: product_data}}">
+    <button class="v-catalog-item__add_to_cart_btn btn">
+            Подробнее
     </button>
+  </router-link>
 </div>
 </template>
 
@@ -39,7 +39,6 @@
         box-shadow: 0 0 8px 0 #e0e0e0;
         padding: $padding*2;
         margin-bottom: $margin*2;
-        float: left;
         &__image{
             width: 100px ;
         }
