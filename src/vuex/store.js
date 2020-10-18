@@ -56,7 +56,7 @@ let store = new Vuex.Store({
                 })
         },
         GET_ANIMES_FROM_API({commit}) {
-            return axios("http://127.0.0.1:8000/movies?count=30", {
+            return axios("http://127.0.0.1:8000/movies?count=100", {
                 method: "GET"
             }).then((animes) => {
                 commit("SET_ANIMES_TO_STATE", animes.data);

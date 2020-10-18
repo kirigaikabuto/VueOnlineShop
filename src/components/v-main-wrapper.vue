@@ -1,6 +1,14 @@
 <template>
+  <div>
+  <div class="menu">
+    <ul>
+      <li><a>Главная</a></li>
+      <li><a>О нас</a></li>
+      <li><a>Категории</a></li>
+    </ul>
+  </div>
     <div class="v-main-wrapper">
-        <p>{{title}}</p>
+
         <keep-alive>
             <router-view>
 
@@ -10,6 +18,7 @@
 
 
     </div>
+  </div>
 </template>
 <script>
 
@@ -39,9 +48,31 @@
 
 <style scoped>
     .v-main-wrapper{
-
         max-width: 900px;
-
         margin:0 auto;
+    }
+    ul {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      float: right;
+    }
+
+    li {
+      float: left;
+    }
+
+    li a {
+      display: block;
+      color: black;
+      text-align: center;
+      padding: 14px 16px;
+      text-decoration: none;
+    }
+
+    /* Change the link color to #111 (black) on hover */
+    li a:hover {
+      background-color: #eeeeee;
     }
 </style>

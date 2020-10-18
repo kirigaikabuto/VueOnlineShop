@@ -14,9 +14,9 @@
 
     <div class="div_anime" v-for="recommended_anime in RECOMMENDED_ANIMES" :key="recommended_anime.id">
       <img :src="recommended_anime.photo" class="v-catalog-item__image" width="50">
-      <router-link :to="{name:'catalog_item',params:{anime: anime}}">
+
         <p>{{recommended_anime.name}}</p>
-      </router-link>
+
     </div>
 
 
@@ -77,7 +77,7 @@ export default {
   width: 100px;
   height: 100px;
   margin-left: 10px;
-  margin-top: 50px;
+  margin-top: 200px;
   float: left;
 }
 </style>
