@@ -9,6 +9,7 @@ let store = new Vuex.Store({
         cart: [],
         animes: [],
         recommendedAnimes: [],
+        accessToken: {},
     },
     mutations: {
         SET_PRODUCTS_TO_STATE: (state, products) => {
@@ -39,6 +40,9 @@ let store = new Vuex.Store({
         },
         SET_RECOMMENDED_ANIMES_TO_STATE: (state, animes) => {
             state.recommendedAnimes = animes
+        },
+        SET_ACCESS_TOKEN: (state, accessToken) => {
+            state.accessToken = accessToken
         }
     },
     actions: {
@@ -72,8 +76,8 @@ let store = new Vuex.Store({
         DELETE_FROM_CART({commit}, index) {
             commit("REMOVE", index)
         },
-        GET_RECOMMENDED_ANIMES({commit},obj) {
-            return axios("http://127.0.0.1:8000/movies/"+obj.id, {
+        GET_RECOMMENDED_ANIMES({commit}, obj) {
+            return axios("http://127.0.0.1:8000/movies/" + obj.id, {
                 method: "GET"
             }).then((animes) => {
                 commit("SET_RECOMMENDED_ANIMES_TO_STATE", animes.data);
@@ -82,6 +86,27 @@ let store = new Vuex.Store({
                 console.log(error);
                 return error
             })
+        },
+        LOGIN({commit}, obj) {
+            return axios(
+                {
+                    method: "POST",
+                    url: "http://localhost:8000/login",
+                    data: {
+                        "username": obj.username,
+                        "password": obj.password
+                    },
+                }
+            )
+                .then((accessToken) => {
+                    console.log(accessToken)
+                    commit("SET_ACCESS_TOKEN", accessToken.data)
+                    return accessToken
+                })
+                .catch((error) => {
+                    console.log(error.response.data);
+                    return error;
+                })
         }
     },
     getters: {
@@ -95,8 +120,11 @@ let store = new Vuex.Store({
             return state.animes;
         },
         RECOMMENDED_ANIMES(state) {
-          return state.recommendedAnimes
+            return state.recommendedAnimes
         },
+        ACCESS_TOKEN(state) {
+            return state.accessToken
+        }
     }
 });
 

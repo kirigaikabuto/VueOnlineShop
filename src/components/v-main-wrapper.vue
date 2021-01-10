@@ -2,9 +2,11 @@
   <div>
   <div class="menu">
     <ul>
-      <li><a>Главная</a></li>
-      <li><a>О нас</a></li>
-      <li><a>Категории</a></li>
+      <router-link :to="{name:'login'}">
+          <li><a>Авторизация</a></li>
+      </router-link>
+
+      <li><a>Регистрация</a></li>
     </ul>
   </div>
     <div class="v-main-wrapper">

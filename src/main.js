@@ -4,7 +4,7 @@ import './assets/styles/styles.scss'
 import store from "./vuex/store";
 import router from "./router/router"
 Vue.config.productionTip = false
-
+require('../node_modules/bootstrap/dist/css/bootstrap.css');
 new Vue({
   render: h => h(App),
   store,

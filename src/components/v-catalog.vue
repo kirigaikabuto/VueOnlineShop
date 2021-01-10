@@ -43,12 +43,6 @@
             }
         },
         mounted() {
-            this.GET_PRODUCTS_FROM_API()
-            .then((response)=>{
-                if(response.data){
-                    console.log("data is getted")
-                }
-            });
             this.GET_ANIMES_FROM_API().then((response)=>{
               if(response.data){
                 console.log("data anime is getted")
