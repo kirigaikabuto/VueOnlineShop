@@ -9,7 +9,9 @@ let store = new Vuex.Store({
         cart: [],
         animes: [],
         recommendedAnimes: [],
+        contentBasedAnimes: [],
         accessToken: {},
+        accessKey: "",
     },
     mutations: {
         SET_PRODUCTS_TO_STATE: (state, products) => {
@@ -41,8 +43,14 @@ let store = new Vuex.Store({
         SET_RECOMMENDED_ANIMES_TO_STATE: (state, animes) => {
             state.recommendedAnimes = animes
         },
+        SET_CONTENT_BASED_ANIMES_TO_STATE: (state, animes) => {
+            state.contentBasedAnimes = animes
+        },
         SET_ACCESS_TOKEN: (state, accessToken) => {
             state.accessToken = accessToken
+        },
+        SET_ACCESS_KEY: (state, token) => {
+            state.accessKey = token.access_key
         }
     },
     actions: {
@@ -60,8 +68,31 @@ let store = new Vuex.Store({
                 })
         },
         GET_ANIMES_FROM_API({commit}) {
-            return axios("http://127.0.0.1:8000/movies?count=100", {
-                method: "GET"
+            let obj = {
+                username: "user1",
+                password: "123456"
+            }
+            axios(
+                {
+                    method: "POST",
+                    url: "http://localhost:8000/auth/login",
+                    data: {
+                        "username": obj.username,
+                        "password": obj.password
+                    },
+                }
+            )
+                .then((accessToken) => {
+                    commit("SET_ACCESS_KEY", accessToken.data)
+                    console.log("access token", accessToken)
+                    return accessToken
+                })
+                .catch((error) => {
+                    console.log(error.response.data);
+                    return error;
+                })
+            return axios("http://localhost:8000/movies?count=100", {
+                method: "GET",
             }).then((animes) => {
                 commit("SET_ANIMES_TO_STATE", animes.data);
                 return animes;
@@ -77,10 +108,23 @@ let store = new Vuex.Store({
             commit("REMOVE", index)
         },
         GET_RECOMMENDED_ANIMES({commit}, obj) {
-            return axios("http://127.0.0.1:8000/movies/" + obj.id, {
-                method: "GET"
+            return axios("http://localhost:8000/movies/collrec?id=" + obj.id + "&count=10", {
+                method: "GET",
+                headers: {"Authorization": "Bearer " + obj.access_key}
             }).then((animes) => {
-                commit("SET_RECOMMENDED_ANIMES_TO_STATE", animes.data);
+                commit("SET_RECOMMENDED_ANIMES_TO_STATE", animes.data.recommended_movies);
+                return animes
+            }).catch((error) => {
+                console.log(error);
+                return error
+            })
+        },
+        GET_CONTENT_BASED_ANIMES({commit}, obj) {
+            return axios("http://localhost:8000/movies/content?id=" + obj.id + "&count=10", {
+                method: "GET",
+                headers: {"Authorization": "Bearer " + obj.access_key}
+            }).then((animes) => {
+                commit("SET_CONTENT_BASED_ANIMES_TO_STATE", animes.data.recommended_movies);
                 return animes
             }).catch((error) => {
                 console.log(error);
@@ -122,8 +166,14 @@ let store = new Vuex.Store({
         RECOMMENDED_ANIMES(state) {
             return state.recommendedAnimes
         },
+        CONTENT_BASED_ANIMES(state) {
+            return state.contentBasedAnimes
+        },
         ACCESS_TOKEN(state) {
             return state.accessToken
+        },
+        ACCESS_KEY(state) {
+            return state.accessKey
         }
     }
 });

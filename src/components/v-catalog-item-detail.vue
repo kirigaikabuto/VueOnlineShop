@@ -14,11 +14,20 @@
     <div v-if="errorExist">
       <p>{{ errorMessage }}</p>
     </div>
+    <h1>Collaborative Filtering</h1>
     <div class="div_anime" v-for="recommended_anime in RECOMMENDED_ANIMES" :key="recommended_anime.id">
       <img :src="recommended_anime.photo" class="v-catalog-item__image" width="50">
 
       <p>{{ recommended_anime.name }}</p>
+      <p>{{ recommended_anime.predicted_rating }}</p>
+    </div>
 
+    <h1>Content based filtering</h1>
+    <div class="div_anime" v-for="recommended_anime in CONTENT_BASED_ANIMES" :key="recommended_anime.id">
+      <img :src="recommended_anime.photo" class="v-catalog-item__image" width="50">
+
+      <p>{{ recommended_anime.name }}</p>
+      <p>{{ recommended_anime.predicted_rating }}</p>
     </div>
 
 
@@ -47,16 +56,29 @@ export default {
   computed: {
     ...mapGetters([
       'RECOMMENDED_ANIMES',
+      "CONTENT_BASED_ANIMES",
+      'ACCESS_KEY',
     ])
   },
   methods: {
     ...mapActions([
       'GET_RECOMMENDED_ANIMES',
+      "GET_CONTENT_BASED_ANIMES"
     ]),
   },
   mounted() {
+    this.anime.access_key = this.ACCESS_KEY
+    console.log(this.anime)
     this.GET_RECOMMENDED_ANIMES(this.anime).then((response) => {
-      console.log(response.response.status)
+      if (response.response.status === 500) {
+        this.errorExist = true;
+        this.errorMessage = "Для просмотра рекомендательного контента пожалуйста авторизуйтесь"
+      } else if (response.data) {
+        console.log("recommedned data is getted")
+        console.log(response.data)
+      }
+    });
+    this.GET_CONTENT_BASED_ANIMES(this.anime).then((response) => {
       if (response.response.status === 500) {
         this.errorExist = true;
         this.errorMessage = "Для просмотра рекомендательного контента пожалуйста авторизуйтесь"
@@ -90,8 +112,8 @@ export default {
 }
 
 .div_anime {
-  width: 100px;
-  height: 100px;
+  width: 150px;
+  height: 150px;
   margin-left: 10px;
   margin-top: 200px;
   float: left;

@@ -30,6 +30,7 @@
                 'PRODUCTS',
                 'CART',
                 'ANIMES',
+                ""
             ])
         },
         methods:{
